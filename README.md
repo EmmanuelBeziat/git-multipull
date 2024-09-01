@@ -24,7 +24,7 @@
 1. Copy `git-multipull.bat` whenever you want (exemple: `C:\cmder\scripts\`)
 2. Add an alias in CMDer config file (Typically, `C:\cmder\config\user-aliases.cmd`):
    ```
-   alias git:multipull=C:\cmder\scripts\git-multipull.bat
+   git:multipull=C:\cmder\scripts\git-multipull.bat
    ```
 3. Reload CMDer. Then go in your main folder where all your repositories are stored, and execute the command:
    ```
