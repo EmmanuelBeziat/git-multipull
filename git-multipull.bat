@@ -2,12 +2,12 @@
 :: Enable delayed expansion to use variables inside loops
 setlocal enabledelayedexpansion
 
-:: Define colors for output (Cmder-specific)
-set "RED=^[[31m"
-set "GREEN=^[[32m"
-set "YELLOW=^[[33m"
-set "BLUE=^[[34m"
-set "NC=^[[0m"  :: No Color (reset)
+:: Define colors for output
+set "RED=0C"
+set "GREEN=0A"
+set "YELLOW=0E"
+set "BLUE=09"
+set "NC=07"  :: Default color
 
 :: Counters for stats
 set /A total=0
@@ -18,13 +18,15 @@ set /A skipped_count=0
 
 :: Find all directories in the current directory
 for /D %%d in (*) do (
-    echo.
-    echo !NC!Directory: !BLUE!%%d!NC!
+    echo(
+    color !NC!
+    echo Directory: [%%d]
     
     :: Check if the directory is a Git repository
     if exist "%%d\.git" (
         pushd "%%d" >nul
-        echo !GREEN!Pulling latest changes...!NC!
+        color !GREEN!
+        echo Pulling latest changes...
 
         :: Perform git pull and capture output
         for /f "delims=" %%x in ('git pull 2^>^&1') do (
@@ -32,34 +34,40 @@ for /D %%d in (*) do (
             echo !output!
 
             :: Check the output for specific phrases
-            echo !output! | findstr /C:"Already up to date." >nul
-            if !errorlevel! equ 0 (
-                echo !YELLOW!Already up to date.!NC!
+            if "!output!"=="Already up to date." (
+                color !YELLOW!
+                echo Already up to date.
                 set /A up_to_date_count+=1
+            ) else if "!output!"=="Updating" (
+                color !GREEN!
+                echo Pull successful.
+                set /A success_count+=1
             ) else (
-                echo !output! | findstr /C:"Updating" >nul
-                if !errorlevel! equ 0 (
-                    echo !GREEN!Pull successful.!NC!
-                    set /A success_count+=1
-                ) else (
-                    echo !RED!Pull failed.!NC!
-                    set /A fail_count+=1
-                )
+                color !RED!
+                echo Pull failed.
+                set /A fail_count+=1
             )
         )
 
         popd >nul
     ) else (
-        echo !RED!Not a git repository. Skipping.!NC!
+        color !RED!
+        echo Not a git repository. Skipping.
         set /A skipped_count+=1
     )
     set /A total+=1
 )
 
 :: Print the summary
-echo.
-echo !BLUE!All repositories checked over a total of !NC!%total%!BLUE! folders!NC!
-echo !GREEN!Success: !NC!%success_count%
-echo !YELLOW!Already up to date: !NC!%up_to_date_count%
-echo !RED!Failed: !NC!%fail_count%
-echo !RED!Skipped: !NC!%skipped_count%
+echo(
+color !BLUE!
+echo All repositories checked over a total of %total% folders
+color !GREEN!
+echo Success: %success_count%
+color !YELLOW!
+echo Already up to date: %up_to_date_count%
+color !RED!
+echo Failed: %fail_count%
+color !RED!
+echo Skipped: %skipped_count%
+color !NC!
