@@ -2,12 +2,12 @@
 :: Enable delayed expansion to use variables inside loops
 setlocal enabledelayedexpansion
 
-:: Define ANSI escape codes for colors
-set "RED=\033[0;31m"
-set "GREEN=\033[0;32m"
-set "YELLOW=\033[1;33m"
-set "BLUE=\033[1;34m"
-set "NC=\033[0m"  :: No Color (reset)
+:: Define colors for output (Cmder-specific)
+set "RED=^[[31m"
+set "GREEN=^[[32m"
+set "YELLOW=^[[33m"
+set "BLUE=^[[34m"
+set "NC=^[[0m"  :: No Color (reset)
 
 :: Counters for stats
 set /A total=0
@@ -18,8 +18,8 @@ set /A skipped_count=0
 
 :: Find all directories in the current directory
 for /D %%d in (*) do (
-    echo(
-    echo [!NC!]Directory: !BLUE!%%d!NC!
+    echo.
+    echo !NC!Directory: !BLUE!%%d!NC!
     
     :: Check if the directory is a Git repository
     if exist "%%d\.git" (
@@ -57,7 +57,7 @@ for /D %%d in (*) do (
 )
 
 :: Print the summary
-echo(
+echo.
 echo !BLUE!All repositories checked over a total of !NC!%total%!BLUE! folders!NC!
 echo !GREEN!Success: !NC!%success_count%
 echo !YELLOW!Already up to date: !NC!%up_to_date_count%
