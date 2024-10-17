@@ -38,9 +38,9 @@ for dir in $dirs; do
         cd - > /dev/null
     else
         echo -e "${RED}Not a git repository. Skipping.${NC}\n"
-		((skipped_count++))
+        ((skipped_count++))
     fi
-	((total++))
+    ((total++))
 done
 
 # Print the summary
@@ -48,4 +48,4 @@ echo -e "${BLUE}All repositories checked over a total of ${NC}${total}${BLUE} fo
 echo -e "${GREEN}Success:${NC} ${success_count}"
 echo -e "${YELLOW}Already up to date:${NC} ${up_to_date_count}"
 echo -e "${RED}Failed:${NC} ${fail_count}"
-echo -e "${RED}Skipped:${NC} ${fail_count}"
+echo -e "${YELLOW}Skipped:${NC} ${skipped_count}"
