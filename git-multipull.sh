@@ -25,10 +25,12 @@ for dir in $dirs; do
         cd "$dir"
         echo -e "${GREEN}Pulling latest changes...${NC}"
         output=$(git pull 2>&1)
+        git_exit_code=$?  # Save exit code of git pull
+
         if echo "$output" | grep -q "Already up to date."; then
             echo -e "${YELLOW}Already up to date.${NC}\n"
             ((up_to_date_count++))
-        elif [ $? -eq 0 ]; then
+        elif [ $git_exit_code -eq 0 ]; then
             echo -e "${GREEN}Pull successful.${NC}\n"
             ((success_count++))
         else
